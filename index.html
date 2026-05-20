@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ KUNG _ FURY _ PROTOCOL ⚡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #030008;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Fixed Background Canvas for 3D Elements */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Hyper-Aggressive Kung Fury CRT Distortion & Scanlines */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.08), rgba(0, 255, 0, 0.03), rgba(0, 0, 255, 0.08));
+            background-size: 100% 6px, 8px 100%;
+            z-index: 999;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        /* Fullscreen Story Sections */
+        .section {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 10% 8%;
+            z-index: 2;
+        }
+
+        .section:nth-child(even) {
+            justify-content: flex-end;
+        }
+
+        /* Content Blocks mapping the retro terminal vibes */
+        .content-panel {
+            max-width: 550px;
+            background: rgba(10, 2, 22, 0.85);
+            border: 4px solid #ff0055;
+            box-shadow: 0 0 25px #ff0055, inset 0 0 15px rgba(255, 0, 85, 0.4);
+            padding: 3rem;
+            transform: skewX(-4deg);
+            transition: border-color 0.3s;
+        }
+
+        .section:nth-child(even) .content-panel {
+            border-color: #00ffcc;
+            box-shadow: 0 0 25px #00ffcc, inset 0 0 15px rgba(0, 255, 204, 0.4);
+        }
+
+        /* Typography */
+        .fury-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 4rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0px #ff0055, -2px -2px 0px #00ffcc;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+        }
+
+        .system-tag {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.75rem;
+            color: #00ffcc;
+            margin-bottom: 1rem;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .section:nth-child(even) .system-tag {
+            color: #ff0055;
+        }
+
+        .description {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #e0d5f0;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Action Buttons */
+        .fury-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            background: #ff0055;
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px #00ffcc;
+        }
+
+        .section:nth-child(even) .fury-btn {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 4px 4px 0px #ff0055;
+        }
+
+        /* Hero Splash Frame */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100vh;
+        }
+
+        .mega-logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 7rem;
+            line-height: 0.85;
+            text-transform: uppercase;
+            font-style: italic;
+            animation: glitchEffect 1s infinite alternate;
+        }
+
+        /* Side-by-Side Visual Layouts */
+        .fury-split-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1300px;
+            gap: 4rem;
+        }
+
+        .section:nth-child(even) .fury-split-wrapper {
+            flex-direction: row-reverse;
+        }
+
+        .side-image-panel {
+            flex: 1;
+            height: 450px;
+            border: 4px solid #00ffcc;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.4);
+            background-size: cover;
+            background-position: center;
+            transform: skewX(-4deg);
+            filter: saturate(1.7) contrast(1.25) hue-rotate(-5deg);
+            transition: all 0.3s ease;
+        }
+
+        .section:nth-child(even) .side-image-panel {
+            border-color: #ff0055;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.4);
+        }
+
+        @media (max-width: 968px) {
+            .fury-split-wrapper {
+                flex-direction: column !important;
+                gap: 2rem;
+            }
+            .side-image-panel {
+                width: 100%;
+                height: 280px;
+            }
+        }
+
+        /* Animations & Keyframes */
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+
+        @keyframes glitchEffect {
+            0% { text-shadow: 5px 5px 0px #ff0055, -3px -3px 0px #00ffcc; transform: scale(1); }
+            90% { text-shadow: 5px 5px 0px #ff0055, -3px -3px 0px #00ffcc; transform: scale(1); }
+            95% { text-shadow: -5px 3px 0px #ff0055, 5px -3px 0px #00ffcc; transform: scale(1.03) skewX(-10deg); }
+            100% { text-shadow: 4px -4px 0px #ff0055, -4px 4px 0px #00ffcc; transform: scale(0.98); }
+        }
+
+        @media (max-width: 768px) {
+            .mega-logo { font-size: 3.5rem; }
+            .fury-title { font-size: 2.5rem; }
+            .content-panel { padding: 1.5rem; width: 100%; transform: none; }
+        }
+    </style>
+
+    <!-- Import Three.js Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div class="crt-overlay"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- HERO SPLASH -->
+    <section class="section hero-section">
+        <div style="z-index: 10;">
+            <span class="system-tag" style="font-size: 1rem;">// SYSTEM BOOT SUCCESSFUL //</span>
+            <h1 class="mega-logo" style="color: #fff;">NERD<br><span style="color: #ff0055;">MCDOJO</span></h1>
+            <p class="description" style="margin-top: 2rem; font-family: 'Press Start 2P'; font-size: 0.8rem; color: #00ffcc;">SCROLL DOWN TO INITIATE TIME TRAVEL</p>
+        </div>
+    </section>
+
+    <!-- SECTION 1: BASKETBALL -->
+    <section class="section" id="sec-hoops">
+        <div class="fury-split-wrapper">
+            <div class="content-panel">
+                <span class="system-tag">PROTOCOL_01 // KINETIC_FORCE</span>
+                <h2 class="fury-title">COURT MAVEN</h2>
+                <p class="description">
+                    When I'm not compiled inside a terminal framework, I'm out breaking ankles on the concrete court. Basketball isn't just a leisure diversion—it's high-speed reactive engineering. Sinking standard deep three-pointers requires perfect physics calculations and muscle memory execution under pressure.
+                </p>
+                <button class="fury-btn" onclick="triggerAction('sec-tech', 'swish');">NEXT LEVEL</button>
+            </div>
+            <div class="side-image-panel" style="background-image: url('https://img.freepik.com/premium-photo/basketball-court-with-glowing-neon-pink-blue-atmosphere-court-has-glossy-floor-there-are-no-people-image_14117-487465.jpg?semt=ais_hybrid&w=740&q=80');"></div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: COMPUTERS & TECH -->
+    <section class="section" id="sec-tech">
+        <div class="fury-split-wrapper">
+            <div class="content-panel">
+                <span class="system-tag">PROTOCOL_02 // CYBERNETICS</span>
+                <h2 class="fury-title">MAINFRAME HACKER</h2>
+                <p class="description">
+                    Tinkering with code matrix pipelines and custom low-level operating environments. From optimizing window management configurations to programming hardware circuits, I isolate systems to push performance beyond limits. Total control over structural computing layouts is the core directive.
+                </p>
+                <button class="fury-btn" onclick="triggerAction('sec-music', 'daft_punk');">OVERCLOCK SYSTEM</button>
+            </div>
+            <div class="side-image-panel" style="background-image: url('https://images.stockcake.com/public/f/4/6/f467533f-fa80-4c68-bbeb-cd489ae33d44_large/vintage-terminal-interface-stockcake.jpg');"></div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: MUSIC -->
+    <section class="section" id="sec-music">
+        <div class="fury-split-wrapper">
+            <div class="content-panel">
+                <span class="system-tag">PROTOCOL_03 // SONIC_OVERDRIVE</span>
+                <h2 class="fury-title">SYNTH PULSE</h2>
+                <p class="description">
+                    Audio streams feeding directly into focus nodes. My auditory stack runs on heavy Outrun arrangements, distorted bass pulses, and classic synth wave rhythms that sound like an assembly language racing sequence. If the soundscape doesn't feel like a high-speed pursuit, the volume isn't high enough.
+                </p>
+                <button class="fury-btn" onclick="triggerAction('sec-manga', 'kavinsky');">ENGAGE AUDIO</button>
+            </div>
+            <div class="side-image-panel" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop');"></div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: MANGA -->
+    <section class="section" id="sec-manga">
+        <div class="fury-split-wrapper">
+            <div class="content-panel">
+                <span class="system-tag">PROTOCOL_04 // VISUAL_CORE</span>
+                <h2 class="fury-title">MANGA CHRONICLES</h2>
+                <p class="description">
+                    Analyzing high-contrast monochrome panel styling, heavy kinetic speed lines, and retro cyberpunk narratives. From golden-era futuristic illustration work to grim apocalyptic character arcs, I break down ink lines to appreciate deep world-building and raw graphic expressionism.
+                </p>
+                <button class="fury-btn" onclick="triggerAction('top', 'scifi_reboot');">REBOOT SEQUENCE</button>
+            </div>
+            <div class="side-image-panel" style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1200&auto=format&fit=crop');"></div>
+        </div>
+    </section>
+
+    <!-- ZERO-DEPENDENCY HARDWARE AUDIO ENGINE -->
+    <script>
+        let globalAudioCtx = null;
+        let runningOscillators = [];
+
+        function triggerAction(targetId, sfxType) {
+            // 1. Core Page Navigation Routing
+            if (targetId === 'top') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                const destination = document.getElementById(targetId);
+                if (destination) destination.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // 2. Clear out existing running nodes immediately to prevent stack collisions
+            stopCurrentSynthesizers();
+
+            // 3. Initialize Audio context safely on structural click event
+            if (!globalAudioCtx) {
+                globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            if (globalAudioCtx.state === 'suspended') {
+                globalAudioCtx.resume();
+            }
+
+            // 4. Route synth generator to matching sound identity request
+            switch(sfxType) {
+                case 'swish':
+                    generateBasketballSwish();
+                    break;
+                case 'daft_punk':
+                    generateEndOfTheLineSynth();
+                    break;
+                case 'kavinsky':
+                    generateOddLookSynth();
+                    break;
+                case 'scifi_reboot':
+                    generateSciFiReboot();
+                    break;
+            }
+        }
+
+        function stopCurrentSynthesizers() {
+            runningOscillators.forEach(osc => {
+                try { osc.stop(); } catch(e) {}
+            });
+            runningOscillators = [];
+        }
+
+        // --- SYNTH ARCHETYPE 1: BASKETBALL SWISH (Friction Velocity Noise Burst) ---
+        function generateBasketballSwish() {
+            const time = globalAudioCtx.currentTime;
+            const bufferSize = globalAudioCtx.sampleRate * 0.55; 
+            const buffer = globalAudioCtx.createBuffer(1, bufferSize, globalAudioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1; 
+            }
+
+            const noiseNode = globalAudioCtx.createBufferSource();
+            noiseNode.buffer = buffer;
+
+            const filter = globalAudioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.Q.setValueAtTime(9, time);
+            filter.frequency.setValueAtTime(1400, time);
+            // Sweeping fast downward velocity curve mimicking a clean net slice
+            filter.frequency.exponentialRampToValueAtTime(350, time + 0.45); 
+
+            const gain = globalAudioCtx.createGain();
+            gain.gain.setValueAtTime(0.55, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+
+            noiseNode.connect(filter);
+            filter.connect(gain);
+            gain.connect(globalAudioCtx.destination);
+
+            noiseNode.start(time);
+            runningOscillators.push(noiseNode);
+        }
+
+        // --- SYNTH ARCHETYPE 2: DAFT PUNK - END OF LINE (Arpeggiated Cyber 8-Step Synth Sequence) ---
+        function generateEndOfTheLineSynth() {
+            const baseTime = globalAudioCtx.currentTime;
+            // Precise 8-step bass melody from Tron Legacy track layout
+            const notes = [110.00, 165.00, 220.00, 165.00, 130.81, 196.00, 261.63, 196.00]; 
+            const durationPerNote = 0.15; 
+            
+            // Loop sequence progressively across the 5-second execution window
+            for (let loop = 0; loop < 5; loop++) {
+                notes.forEach((freq, idx) => {
+                    const noteTime = baseTime + (idx * durationPerNote) + (loop * notes.length * durationPerNote);
+                    if (noteTime > baseTime + 4.8) return; 
+
+                    const osc = globalAudioCtx.createOscillator();
+                    const gain = globalAudioCtx.createGain();
+                    const filter = globalAudioCtx.createBiquadFilter();
+                    
+                    osc.type = 'sawtooth'; 
+                    osc.frequency.setValueAtTime(freq, noteTime);
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(250, noteTime);
+                    filter.frequency.exponentialRampToValueAtTime(1400, noteTime + 0.06);
+
+                    gain.gain.setValueAtTime(0.35, noteTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, noteTime + durationPerNote - 0.02);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(globalAudioCtx.destination);
+
+                    osc.start(noteTime);
+                    osc.stop(noteTime + durationPerNote);
+                    runningOscillators.push(osc);
+                });
+            }
+        }
+
+        // --- SYNTH ARCHETYPE 3: KAVINSKY - ODD LOOK (Gritty Detuned French House Bass Chord) ---
+        function generateOddLookSynth() {
+            const time = globalAudioCtx.currentTime;
+            const chordFreqs = [73.42, 146.83, 220.00, 293.66]; // Heavy D-Minor baseline foundation stack
+            
+            chordFreqs.forEach((freq, i) => {
+                const osc = globalAudioCtx.createOscillator();
+                const gain = globalAudioCtx.createGain();
+                const filter = globalAudioCtx.createBiquadFilter();
+
+                osc.type = (i % 2 === 0) ? 'sawtooth' : 'square'; 
+                osc.frequency.setValueAtTime(freq + (Math.random() * 1.5 - 0.75), time); 
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(180, time);
+                filter.frequency.linearRampToValueAtTime(1500, time + 4.0);
+
+                gain.gain.setValueAtTime(0.25, time);
+                gain.gain.setValueAtTime(0.25, time + 4.5); 
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 5.0); 
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(globalAudioCtx.destination);
+
+                osc.start(time);
+                osc.stop(time + 5.0);
+                runningOscillators.push(osc);
+            });
+        }
+
+        // --- SYNTH ARCHETYPE 4: SCI-FI REBOOT (Hyper-Space Pitch Laser Slide & Glitch Power Down) ---
+        function generateSciFiReboot() {
+            const time = globalAudioCtx.currentTime;
+            const osc = globalAudioCtx.createOscillator();
+            const gain = globalAudioCtx.createGain();
+
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(1200, time);
+            osc.frequency.linearRampToValueAtTime(600, time + 1.5);
+            osc.frequency.setValueAtTime(300, time + 1.6);
+            osc.frequency.exponentialRampToValueAtTime(40, time + 4.8);
+
+            const lfo = globalAudioCtx.createOscillator();
+            const lfoGain = globalAudioCtx.createGain();
+            lfo.frequency.setValueAtTime(12, time); 
+            lfoGain.gain.setValueAtTime(15, time);
+
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+
+            gain.gain.setValueAtTime(0.3, time);
+            gain.gain.linearRampToValueAtTime(0.3, time + 3.5);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + 5.0);
+
+            osc.connect(gain);
+            gain.connect(globalAudioCtx.destination);
+
+            lfo.start(time);
+            osc.start(time);
+            
+            lfo.stop(time + 5.0);
+            osc.stop(time + 5.0);
+
+            runningOscillators.push(lfo);
+            runningOscillators.push(osc);
+        }
+    </script>
+
+    <!-- THREE.JS ENGINE CORE -->
+    <script>
+        // --- 1. SETUP ENGINE INITIALIZATION ---
+        const canvas = document.querySelector('#bg-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#030008');
+        scene.fog = new THREE.FogExp2('#030008', 0.08);
+
+        const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 2, 8);
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // --- 2. LIGHTING SCHEME ---
+        const neonPinkLight = new THREE.PointLight('#ff0055', 3, 20);
+        neonPinkLight.position.set(-4, 4, 2);
+        scene.add(neonPinkLight);
+
+        const neonCyanLight = new THREE.PointLight('#00ffcc', 3, 20);
+        neonCyanLight.position.set(4, 4, 2);
+        scene.add(neonCyanLight);
+
+        // --- 3. GENERATE INFINITE BACKGROUND GRID & MOUNTAINS ---
+        const gridGeo = new THREE.PlaneGeometry(60, 60, 50, 50);
+        const posAttr = gridGeo.attributes.position;
+        for (let i = 0; i < posAttr.count; i++) {
+            const x = posAttr.getX(i);
+            const y = posAttr.getY(i);
+            if (Math.abs(x) > 6) { 
+                const height = Math.sin(x * 0.5) * Math.cos(y * 0.5) * 2.5 + (Math.random() * 0.2);
+                posAttr.setZ(i, height);
+            }
+        }
+        gridGeo.computeVertexNormals();
+
+        const gridMat = new THREE.MeshBasicMaterial({ color: 0xff0055, wireframe: true });
+        const terrain = new THREE.Mesh(gridGeo, gridMat);
+        terrain.rotation.x = -Math.PI / 2;
+        terrain.position.set(0, -1, -10);
+        scene.add(terrain);
+
+        // --- 4. PROCEDURAL 3D SHAPE OBJECTS FOR HOBBIES ---
+        const meshesGroup = new THREE.Group();
+        scene.add(meshesGroup);
+
+        const neonWireframeMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, wireframe: true });
+        const magentaWireframeMat = new THREE.MeshBasicMaterial({ color: 0xff0055, wireframe: true });
+
+        const ballGeo = new THREE.IcosahedronGeometry(1.6, 2);
+        const ballMesh = new THREE.Mesh(ballGeo, neonWireframeMat);
+        ballMesh.position.set(-3, 2, -5); 
+        meshesGroup.add(ballMesh);
+
+        const techGeo = new THREE.TorusKnotGeometry(1.2, 0.3, 100, 16);
+        const techMesh = new THREE.Mesh(techGeo, magentaWireframeMat);
+        techMesh.position.set(3, 2, -15); 
+        meshesGroup.add(techMesh);
+
+        const musicGeo = new THREE.OctahedronGeometry(1.5, 1);
+        const musicMesh = new THREE.Mesh(musicGeo, neonWireframeMat);
+        musicMesh.position.set(-3, 2, -25); 
+        meshesGroup.add(musicMesh);
+
+        const mangaGeo = new THREE.ConeGeometry(1.4, 2.5, 4, 4);
+        const mangaMesh = new THREE.Mesh(mangaGeo, magentaWireframeMat);
+        mangaMesh.position.set(3, 2, -35); 
+        meshesGroup.add(mangaMesh);
+
+        // --- 5. SMOOTH INTERACTIVE SCROLL TRACKING ---
+        let targetScrollY = 0;
+        let currentScrollY = 0;
+
+        window.addEventListener('scroll', () => {
+            targetScrollY = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        });
+
+        // --- 6. RENDER LOOP WITH INTERPOLATION ---
+        const clock = new THREE.Clock();
+
+        function renderEngine() {
+            const delta = clock.getDelta();
+            const elapsed = clock.getElapsedTime();
+
+            currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+
+            camera.position.z = 8 - (currentScrollY * 42);
+            camera.position.x = Math.sin(elapsed * 0.5) * 0.3;
+
+            terrain.position.z = -10 + ((elapsed * 1.5) % 1.2);
+
+            ballMesh.rotation.y += 0.6 * delta;
+            ballMesh.rotation.x += 0.3 * delta;
+
+            techMesh.rotation.z -= 0.4 * delta;
+            techMesh.rotation.y += 0.5 * delta;
+
+            musicMesh.rotation.x += 0.8 * delta;
+            
+            mangaMesh.rotation.y -= 0.5 * delta;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(renderEngine);
+        }
+
+        renderEngine();
+
+        // --- 7. HANDLING ASPECT ADAPTATION ON RESIZE ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
